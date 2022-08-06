@@ -1,0 +1,44 @@
+//TASK : https://oj.vnoi.info/problem/chain2
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn = 3e5;
+long node[maxn][26],cnt = 0,cntEnd[maxn],ans = 0;
+set <string> s;
+void build(string s){
+    long cur = 0;
+    for(char c : s){
+        long m = c-'a';
+        if (!node[cur][m])
+            node[cur][m] = ++cnt;
+        cur = node[cur][m];
+    }
+    cntEnd[cur] = 1;
+}
+void dfs(int u){
+    ans = max(ans,cntEnd[u]);
+    for(int i = 0; i < 26; ++i){
+        long v = node[u][i];
+        if (!v)
+            continue;
+        cntEnd[v] += cntEnd[u];
+        dfs(v);
+    }
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    int m;
+    cin >> m;
+    string k;
+    while (m--){
+        cin >> k;
+        s.insert(k);
+    }
+    for(auto i:s)
+        build(i);
+    dfs(0);
+    cout << ans;
+    return 0;
+}
